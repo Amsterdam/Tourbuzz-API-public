@@ -24,7 +24,7 @@ node {
 
     stage("Build image") {
         tryStep "build", {
-            def image = docker.build("docker-registry.secure.amsterdam.nl/fixxx/tourbuzz-frontend:${env.BUILD_NUMBER}")
+            def image = docker.build("docker-registry.secure.amsterdam.nl/fixxx/tourbuzz-backend:${env.BUILD_NUMBER}")
             image.push()
         }
     }
@@ -39,7 +39,7 @@ if (BRANCH == "master") {
     node {
         stage('Push acceptance image') {
             tryStep "image tagging", {
-                def image = docker.image("docker-registry.secure.amsterdam.nl/fixxx/tourbuzz-frontend:${env.BUILD_NUMBER}")
+                def image = docker.image("docker-registry.secure.amsterdam.nl/fixxx/tourbuzz-backend:${env.BUILD_NUMBER}")
                 image.pull()
                 image.push("acceptance")
                 image.push("production")
@@ -54,7 +54,7 @@ if (BRANCH == "master") {
                 parameters: [
                     [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
                     [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy.yml'],
-                    [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_tourbuzz-frontend"] 
+                    [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_tourbuzz-backend"] 
                 ]
             }
         }
@@ -69,7 +69,7 @@ if (BRANCH == "master") {
     node {
         stage('Push production image') {
             tryStep "image tagging", {
-                def image = docker.image("docker-registry.secure.amsterdam.nl/fixxx/tourbuzz-frontend:${env.BUILD_NUMBER}")
+                def image = docker.image("docker-registry.secure.amsterdam.nl/fixxx/tourbuzz-backend:${env.BUILD_NUMBER}")
                 image.pull()
                 image.push("production")
                 image.push("latest")
@@ -84,7 +84,7 @@ if (BRANCH == "master") {
                 parameters: [
                         [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
                         [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy.yml'],
-                        [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_tourbuzz-frontend"]
+                        [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_tourbuzz-backend"]
                 ]
             }
         }
